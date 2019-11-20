@@ -1,0 +1,25 @@
+---
+title: "Normjam Plots"
+author: "Will Townes"
+date: "11/20/2019"
+output: html_document
+---
+
+```{r}
+library(ggplot2); theme_set(theme_bw())
+library(tidyverse)
+```
+
+```{r}
+d<-read.csv("real/normjam/ks_stats.csv")
+d2<-d %>% group_by(variable) %>% summarise(avg_score=mean(value)) %>% arrange(avg_score)
+d$variable<-factor(d$variable,levels=d2$variable)
+ggplot(d,aes(x=variable,y=value,fill=variable))+geom_bar(stat="identity",position="dodge")+facet_wrap(~index,scales="free")+theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+d3<-subset(d,variable %in% c("nb_mean","glm_pca_nb_mean","zinb_mean","glm_pca_poisson_mean","poisson_mean","sctransform_mean"))
+d3$variable<-factor(d3$variable)
+ggplot(d3,aes(x=variable,y=value,fill=variable))+geom_bar(stat="identity",position="dodge")+facet_wrap(~index,scales="free")+theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
